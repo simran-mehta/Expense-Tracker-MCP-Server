@@ -1,0 +1,11 @@
+uv init
+uv add fastmcp
+
+with the folder name it creates venv shows .venv
+
+
+to run server command - fastmcp run main.py
+
+for debugging command - fastmcp dev inspector main.py  
+
+
