@@ -40,15 +40,10 @@ This server exposes a set of MCP tools that Claude (or any MCP-compatible client
 
 ```
 expense-tracker-mcp-server/
-├── server.py           # MCP server entry point
-├── database.py         # SQLite setup and query helpers
-├── tools/
-│   ├── expenses.py     # add, list, update, delete expense tools
-│   ├── summary.py      # get_expense_summary, export_expenses tools
-│   └── budget.py       # set_budget, get_budget_status tools
-├── models.py           # Pydantic models / dataclasses
+├── main.py             # MCP server entry point (all tools)
 ├── expenses.db         # SQLite database (auto-created on first run)
 ├── pyproject.toml      # Project metadata and dependencies
+├── .venv/              # Virtual environment (created by uv)
 └── readme.md
 ```
 
@@ -69,17 +64,19 @@ expense-tracker-mcp-server/
 git clone https://github.com/your-username/expense-tracker-mcp-server.git
 cd expense-tracker-mcp-server
 
-# Create virtual environment and install dependencies
-uv venv
-uv pip install mcp pydantic
+# Initialize the project and install dependencies
+uv init
+uv add fastmcp
 ```
+
+This creates a `.venv` folder automatically inside the project directory.
 
 ---
 
 ## Running the Server
 
 ```bash
-uv run python server.py
+fastmcp run main.py
 ```
 
 The server starts and listens for MCP connections via stdio. The SQLite database (`expenses.db`) is created automatically on first run.
@@ -98,13 +95,20 @@ Add the following to your Claude Desktop config file:
   "mcpServers": {
     "expense-tracker": {
       "command": "uv",
-      "args": ["run", "python", "/absolute/path/to/server.py"]
+      "args": [
+        "--directory",
+        "C:\\Learning\\Expense-Tracker-MCP-Server",
+        "run",
+        "fastmcp",
+        "run",
+        "main.py"
+      ]
     }
   }
 }
 ```
 
-Restart Claude Desktop. You should see the expense tracker tools available in the tools panel.
+Fully quit Claude Desktop (system tray → Quit) and reopen it. You should see the expense tracker tools available in the tools panel.
 
 ---
 
@@ -124,11 +128,8 @@ Once connected to Claude, you can say:
 ## Development
 
 ```bash
-# Install dev dependencies
-uv pip install mcp[dev]
-
 # Run with MCP inspector for debugging
-mcp dev server.py
+fastmcp dev inspector main.py
 ```
 
 ---
